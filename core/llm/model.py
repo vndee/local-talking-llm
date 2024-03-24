@@ -38,9 +38,9 @@ def download_gguf_model_weight(model_path: str, model_name: str) -> bool:
         if sc:
             sc.llm_model_local_path = dest_path
             sc.llm_model_url_path = model_path
-            _ = crud.update(sc)
+            crud.update()
         else:
-            _ = crud.create(SystemConfig(
+            crud.create(SystemConfig(
                 llm_model_url_path=model_path,
                 llm_model_local_path=dest_path,
                 is_active=True

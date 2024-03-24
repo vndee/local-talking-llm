@@ -25,7 +25,7 @@ class CRUD:
         self.db.commit()
 
     def get_active_system_config(self) -> SystemConfig:
-        sc = self.db.query(SystemConfig).filter(SystemConfig.is_active == True)
+        sc = self.db.query(SystemConfig).filter(SystemConfig.is_active == True).first()
         return sc
 
 
