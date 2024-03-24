@@ -14,7 +14,7 @@ Base = declarative_base()
 SessionLocal = sessionmaker(bind=engine)
 
 
-class BaseMemoryModel(Base):
+class BaseMemoryModel(Base):  # type: ignore
     __abstract__ = True
 
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
