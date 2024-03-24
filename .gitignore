@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 
 cache/
+nitro/
 .mypy_cache/
 .ruff_cache/
 *.gguf

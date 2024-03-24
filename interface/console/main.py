@@ -11,9 +11,7 @@ if __name__ == "__main__":
     while not user_name:
         user_name = console.input("[blue]Your name: ")
 
-    with console.status("[yellow]Loading...", spinner="monkey"):
-        user_session = crud.create(UserSession(user_name=user_name))
-
+    user_session = crud.create(UserSession(user_name=user_name))
     console.print(f"[cyan]Nice to see you, {user_session.user_name}!")
     gguf_model_path = console.input("[blue]Enter a GGUF model path, "
                                     "this can be a local path or a URL (leave empty for default): ")

@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 from sqlalchemy import create_engine
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import sessionmaker, declarative_base
 from core.common.const import MemoryConfig
 
@@ -52,6 +52,7 @@ class SystemConfig(BaseMemoryModel):
     system_prompt = Column(String, nullable=True)
     llm_model_url_path = Column(String, nullable=True)
     llm_model_local_path = Column(String, nullable=True)
+    is_active = Column(Boolean, nullable=True)
 
 
 class Message(BaseMemoryModel):

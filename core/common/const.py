@@ -17,4 +17,5 @@ class MemoryConfig:
 
 @dataclass
 class LLMConfig:
+    nitro_server_url: str = "http://localhost:3928"
     model_weight_dir: str = os.path.join(os.getcwd(), "weights")

@@ -1,4 +1,4 @@
-from core.memory.schema import SessionLocal
+from core.memory.schema import SessionLocal, SystemConfig
 
 
 class CRUD:
@@ -23,6 +23,10 @@ class CRUD:
     def delete(self, obj):
         self.db.delete(obj)
         self.db.commit()
+
+    def get_active_system_config(self) -> SystemConfig:
+        sc = self.db.query(SystemConfig).filter(SystemConfig.is_active == True)
+        return sc
 
 
 crud = CRUD(SessionLocal())
