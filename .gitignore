@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+cache/
 .mypy_cache/
 .ruff_cache/
 *.gguf
