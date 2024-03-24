@@ -52,6 +52,10 @@ def download_gguf_model_weight(model_path: str, model_name: str) -> bool:
                 )
             )
 
+        if not load_model_into_nitro(dest_path):
+            console.print("[red]Failed to load model into Nitro.")
+            return False
+
         return True
     except requests.exceptions.RequestException as e:
         console.print(f"[red]Failed to download model from {model_path}: {e}")
@@ -72,6 +76,8 @@ def setup(model_path: str) -> bool:
                 llm_model_local_path=model_path,
             )
         )
+        load_model_into_nitro(model_path)
+        return True
 
     if not model_path:
         # check if the model is already downloaded
