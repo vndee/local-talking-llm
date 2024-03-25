@@ -10,6 +10,9 @@ python = "^3.11"
 requests = "^2.31.0"
 rich = "^13.7.1"
 sqlalchemy = "^2.0.29"
+torch = "^2.2.1"
+openai-whisper = {git = "https://github.com/openai/whisper.git"}
+sounddevice = "^0.4.6"
 
 
 [tool.poetry.group.dev.dependencies]
