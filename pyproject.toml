@@ -6,7 +6,7 @@ authors = ["Duy Huynh <vndee.huynh@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.11,<3.12"
 requests = "^2.31.0"
 rich = "^13.7.1"
 sqlalchemy = "^2.0.29"
