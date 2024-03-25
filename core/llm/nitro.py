@@ -8,7 +8,7 @@ def download_nitro():
 
 
 def check_nitro_health() -> bool:
-    url = f"{LLMConfig.nitro_server_url}/healthz"
+    url = f"{LLMConfig.NITRO_SERVER_URL}/healthz"
     try:
         response = requests.get(url)
         response.raise_for_status()
@@ -19,7 +19,7 @@ def check_nitro_health() -> bool:
 
 def load_model_into_nitro(model_path) -> bool:
     with console.status("[cyan]Loading model into Nitro...", spinner="monkey"):
-        url = f"{LLMConfig.nitro_server_url}/inferences/llamacpp/loadmodel"
+        url = f"{LLMConfig.NITRO_SERVER_URL}/inferences/llamacpp/loadmodel"
         headers = {"Content-Type": "application/json"}
         data = {"llama_model_path": model_path, "ctx_len": 512, "ngl": 100}
 

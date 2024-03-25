@@ -12,10 +12,15 @@ GGUFModelEndpoint: dict = {
 
 @dataclass
 class MemoryConfig:
-    memory_cache_dir: str = os.path.join(os.getcwd(), "cache")
+    MEMORY_CACHE_DIR: str = os.path.join(os.getcwd(), "cache")
 
 
 @dataclass
 class LLMConfig:
-    nitro_server_url: str = "http://localhost:3928"
-    model_weight_dir: str = os.path.join(os.getcwd(), "weights")
+    NITRO_SERVER_URL: str = "http://localhost:3928"
+    MODEL_WEIGHT_DIR: str = os.path.join(os.getcwd(), "weights")
+
+
+@dataclass
+class STTConfig:
+    AUDIO_SAMPLE_RATE: int = 16000

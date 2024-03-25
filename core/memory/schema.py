@@ -5,11 +5,11 @@ from sqlalchemy import Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import sessionmaker, declarative_base
 from core.common.const import MemoryConfig
 
-db_directory = os.path.dirname(MemoryConfig.memory_cache_dir)
+db_directory = os.path.dirname(MemoryConfig.MEMORY_CACHE_DIR)
 if not os.path.exists(db_directory):
     os.makedirs(db_directory)
 
-engine = create_engine(f"sqlite:///{MemoryConfig.memory_cache_dir}/memory.db")
+engine = create_engine(f"sqlite:///{MemoryConfig.MEMORY_CACHE_DIR}/memory.db")
 Base = declarative_base()
 SessionLocal = sessionmaker(bind=engine)
 

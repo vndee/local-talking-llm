@@ -13,7 +13,7 @@ def download_gguf_model_weight(model_path: str, model_name: str) -> bool:
         return False
 
     try:
-        dest_path = os.path.join(MemoryConfig.memory_cache_dir, model_name)
+        dest_path = os.path.join(MemoryConfig.MEMORY_CACHE_DIR, model_name)
         console.print(
             f"[cyan]Trying download model from {model_path} to {dest_path}..."
         )
