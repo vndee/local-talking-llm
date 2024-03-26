@@ -4,3 +4,4 @@ class TextToSpeechService:
 
     def speak(self, text):
         raise NotImplementedError()
+
