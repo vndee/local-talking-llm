@@ -10,8 +10,9 @@ warnings.filterwarnings(
 
 
 class SpeechToTextService:
-    def __init__(self):
-        self.model = whisper.load_model("base")
+    def __init__(self, device: str = "cpu"):
+        self.device = device
+        self.model = whisper.load_model("tiny.en")
         self.options = whisper.DecodingOptions()
 
     @staticmethod

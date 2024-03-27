@@ -11,7 +11,7 @@ nitro/
 
 # C extensions
 *.so
-
+*.wav
 # Distribution / packaging
 .Python
 build/

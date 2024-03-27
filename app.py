@@ -1,50 +1,82 @@
-import queue
+import time
 import threading
+import numpy as np
+import whisper
 import sounddevice as sd
-from core.common.const import console
+from queue import Queue
+from rich.console import Console
+
+console = Console()
+model = whisper.load_model("base.en")
 
 
-def listen_for_quit(stop_event):
-    console.print("[yellow]Start speaking! Press 'q' to quit.")
-    while True:
-        if console.read() == "q":
-            console.print("[yellow]Goodbye!")
-            stop_event.set()
-            break
+def transcribe(audio_np: np.ndarray) -> str:
+    result = model.transcribe(audio_np, fp16=False)  # Set fp16=True if using a GPU
+    text = result["text"].strip()
+    return text
 
 
-def conversation(stop_event):
-    q = queue.Queue()
-
+def record_audio(stop_event, data_queue):
     def callback(indata, frames, time, status):
         if status:
             console.print(status)
-        q.put(bytes(indata))
+        # Put the audio bytes into the queue
+        data_queue.put(bytes(indata))
 
-    with sd.RawInputStream(samplerate=16000, blocksize=8000, callback=callback):
-        console.print("[blue]Start speaking!")
+    # Start recording
+    with sd.RawInputStream(
+        samplerate=16000, dtype="int16", channels=1, callback=callback
+    ):
         while not stop_event.is_set():
-            audio = q.get()
-            console.print(f"[green]You said: {audio}")
+            # Small sleep to prevent this loop from consuming too much CPU
+            time.sleep(0.1)
 
 
 if __name__ == "__main__":
-    console.print("[blue]Welcome to local taking llm!")
+    console.print(
+        "[blue]Press Enter to start speaking. Press Enter again to stop and transcribe."
+    )
 
-    user_name = None
-    while not user_name:
-        user_name = console.input("[blue]Your name: ")
+    try:
+        while True:
+            # Wait for the user to press Enter to start recording
+            input("[blue]Press Enter to start recording...")
+            console.print("[yellow]Recording... Press Enter to stop.")
 
-    console.print(f"[cyan]Nice to see you, {user_name}!")
+            data_queue = Queue()  # type: ignore[var-annotated]
+            stop_event = threading.Event()
 
-    stop_event = threading.Event()
-    conversation_thread = threading.Thread(target=conversation, args=(stop_event,))
-    quit_listener_thread = threading.Thread(target=listen_for_quit, args=(stop_event,))
+            # Start recording in a background thread
+            recording_thread = threading.Thread(
+                target=record_audio,
+                args=(
+                    stop_event,
+                    data_queue,
+                ),
+            )
+            recording_thread.start()
 
-    conversation_thread.start()
-    quit_listener_thread.start()
+            # Wait for the user to press Enter to stop recording
+            input()  # No need to print a message as the previous message indicates to press Enter to stop
+            stop_event.set()
+            recording_thread.join()
 
-    conversation_thread.join()
-    quit_listener_thread.join()
+            # Combine audio data from queue
+            audio_data = b"".join(list(data_queue.queue))
+            audio_np = (
+                np.frombuffer(audio_data, dtype=np.int16).astype(np.float32) / 32768.0
+            )
 
-    console.print("[blue]Session ended!")
+            # Transcribe the recorded audio
+            if audio_np.size > 0:  # Proceed if there's audio data
+                text = transcribe(audio_np)
+                console.print(f"[green]Transcription: {text}")
+            else:
+                console.print(
+                    "[red]No audio recorded. Please ensure your microphone is working."
+                )
+
+    except KeyboardInterrupt:
+        console.print("\n[red]Exiting...")
+
+    console.print("[blue]Session ended.")
