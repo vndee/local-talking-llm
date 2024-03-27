@@ -2,9 +2,6 @@ import queue
 import threading
 import sounddevice as sd
 from core.common.const import console
-from core.memory.schema import UserSession
-from core.memory.function import crud
-from core.llm.model import setup
 
 
 def listen_for_quit(stop_event):
@@ -38,13 +35,7 @@ if __name__ == "__main__":
     while not user_name:
         user_name = console.input("[blue]Your name: ")
 
-    user_session = crud.create(UserSession(user_name=user_name))
-    console.print(f"[cyan]Nice to see you, {user_session.user_name}!")
-    gguf_model_path = console.input(
-        "[blue]Enter a GGUF model path, "
-        "this can be a local path or a URL (leave empty for default): "
-    )
-    setup(gguf_model_path)
+    console.print(f"[cyan]Nice to see you, {user_name}!")
 
     stop_event = threading.Event()
     conversation_thread = threading.Thread(target=conversation, args=(stop_event,))

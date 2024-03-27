@@ -4,22 +4,18 @@ import tempfile
 import numpy as np
 from subprocess import CalledProcessError, run
 
-from core.common.const import STTConfig
-from core.stt.base import SpeechToTextService
-
 warnings.filterwarnings(
     "ignore", message="FP16 is not supported on CPU; using FP32 instead"
 )
 
 
-class WhisperSpeechToTextService(SpeechToTextService):
+class SpeechToTextService:
     def __init__(self):
-        super().__init__()
         self.model = whisper.load_model("base")
         self.options = whisper.DecodingOptions()
 
     @staticmethod
-    def load_audio(audio: bytes, sr: int = STTConfig.AUDIO_SAMPLE_RATE) -> np.ndarray:
+    def load_audio(audio: bytes, sr: int = 16000) -> np.ndarray:
         with tempfile.NamedTemporaryFile(delete=True) as f:
             f.write(audio)
             file = f.name
@@ -52,13 +48,3 @@ class WhisperSpeechToTextService(SpeechToTextService):
     def transcribe(self, audio: bytes, per_word_confidence_color: bool = False):
         audio = self.load_audio(audio)
         return self.model.transcribe(audio, word_timestamps=per_word_confidence_color)
-
-
-audio_file = "./cache/test.mp4"
-with open(audio_file, "rb") as f:
-    audio_file = f.read()  # type: ignore[assignment]
-
-
-stt = WhisperSpeechToTextService()
-result = stt.transcribe(audio_file)  # type: ignore[arg-type]
-print(result)
