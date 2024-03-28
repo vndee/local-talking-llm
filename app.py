@@ -5,15 +5,43 @@ import whisper
 import sounddevice as sd
 from queue import Queue
 from rich.console import Console
+from langchain.memory import ConversationBufferMemory
+from langchain.chains import ConversationChain
+from langchain.prompts import PromptTemplate
+from langchain_community.llms import Ollama
 
 console = Console()
-model = whisper.load_model("base.en")
+stt = whisper.load_model("base.en")
+
+template = """The following is a friendly conversation between a human and an AI. The AI is talkative and provides 
+lots of specific details from its context. If the AI does not know the answer to a question, it truthfully says it does 
+not know.
+Current conversation:
+{history}
+Human: {input}
+Assistant:"""
+PROMPT = PromptTemplate(input_variables=["history", "input"], template=template)
+chain = ConversationChain(
+    prompt=PROMPT,
+    verbose=True,
+    memory=ConversationBufferMemory(ai_prefix="Assistant:"),
+    llm=Ollama(model="mistral"),
+)
 
 
 def transcribe(audio_np: np.ndarray) -> str:
-    result = model.transcribe(audio_np, fp16=False)  # Set fp16=True if using a GPU
+    result = stt.transcribe(audio_np, fp16=False)  # Set fp16=True if using a GPU
     text = result["text"].strip()
     return text
+
+
+def get_llm_response(text: str) -> str:
+    response = chain.predict(input=text)
+    # trim the ai prefix if it exists
+    if response.startswith("Assistant:"):
+        response = response[len("Assistant:") :].strip()
+
+    return response
 
 
 def record_audio(stop_event, data_queue):
@@ -34,7 +62,7 @@ def record_audio(stop_event, data_queue):
 
 if __name__ == "__main__":
     console.print(
-        "[blue]Press Enter to start speaking. Press Enter again to stop and transcribe."
+        "[cyan]Press Enter to start speaking. Press Enter again to stop and transcribe.\nPress Ctrl+C to exit."
     )
 
     try:
@@ -69,8 +97,14 @@ if __name__ == "__main__":
 
             # Transcribe the recorded audio
             if audio_np.size > 0:  # Proceed if there's audio data
-                text = transcribe(audio_np)
-                console.print(f"[green]Transcription: {text}")
+                with console.status("Transcribing...", spinner="monkey"):
+                    text = transcribe(audio_np)
+                console.print(f"[green]You: {text}")
+
+                with console.status("Generating response...", spinner="dots"):
+                    response = get_llm_response(text)
+
+                console.print(f"[green]Assistant: {response}")
             else:
                 console.print(
                     "[red]No audio recorded. Please ensure your microphone is working."
