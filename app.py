@@ -63,14 +63,13 @@ def record_audio(stop_event, data_queue):
 
 if __name__ == "__main__":
     console.print(
-        "[cyan]Press Enter to start speaking. Press Enter again to stop and transcribe.\nPress Ctrl+C to exit."
+        "[cyan]Assistant started! Press Ctrl+C to exit."
     )
 
     try:
         while True:
             # Wait for the user to press Enter to start recording
-            input("[blue]Press Enter to start recording...")
-            console.print("[blue]Recording... Press Enter to stop.")
+            console.input("Press Enter to start recording, then press Enter again to stop.")
 
             data_queue = Queue()  # type: ignore[var-annotated]
             stop_event = threading.Event()
