@@ -1,5 +1,5 @@
+import time
 import torch
-import scipy
 import warnings
 from transformers import AutoProcessor, BarkModel
 
@@ -16,7 +16,8 @@ class TextToSpeechService:
         self.model = BarkModel.from_pretrained("suno/bark-small")
         self.model.to(self.device)
 
-    def synthesize(self, text: str, voice_preset: str = "v2/en_speaker_9"):
+    def synthesize(self, text: str, voice_preset: str = "v2/en_speaker_1"):
+        t0 = time.time()
         inputs = self.processor(text, voice_preset=voice_preset, return_tensors="pt")
         inputs = {k: v.to(self.device) for k, v in inputs.items()}
 
@@ -24,13 +25,6 @@ class TextToSpeechService:
             audio_array = self.model.generate(**inputs)
 
         audio_array = audio_array.cpu().numpy().squeeze()
-
         sample_rate = self.model.generation_config.sample_rate
-        scipy.io.wavfile.write("bark_out.wav", rate=sample_rate, data=audio_array)
-
-
-tts = TextToSpeechService()
-tts.synthesize(
-    "huggingface/tokenizers: The current process just got forked, after parallelism has already been used. "
-    "Disabling parallelism to avoid deadlocks..."
-)
+        print(f"Generated speech in {time.time() - t0:.2f} seconds.")
+        return sample_rate, audio_array

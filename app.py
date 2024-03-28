@@ -9,23 +9,23 @@ from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationChain
 from langchain.prompts import PromptTemplate
 from langchain_community.llms import Ollama
+from tts import TextToSpeechService
 
 console = Console()
 stt = whisper.load_model("base.en")
-
-template = """The following is a friendly conversation between a human and an AI. The AI is talkative and provides 
-lots of specific details from its context. If the AI does not know the answer to a question, it truthfully says it does 
-not know.
-Current conversation:
+tts = TextToSpeechService()
+template = """
+<s>[INST]You are a helpful assistant.You are polite and respectful.[/INST]<s>
+The conversation transcript is as follows
 {history}
-Human: {input}
-Assistant:"""
+And here is the user follow-up: {input}
+"""
 PROMPT = PromptTemplate(input_variables=["history", "input"], template=template)
 chain = ConversationChain(
     prompt=PROMPT,
     verbose=True,
     memory=ConversationBufferMemory(ai_prefix="Assistant:"),
-    llm=Ollama(model="mistral"),
+    llm=Ollama(),
 )
 
 
@@ -97,14 +97,17 @@ if __name__ == "__main__":
 
             # Transcribe the recorded audio
             if audio_np.size > 0:  # Proceed if there's audio data
-                with console.status("Transcribing...", spinner="monkey"):
+                with console.status("Transcribing...", spinner="arc"):
                     text = transcribe(audio_np)
                 console.print(f"[green]You: {text}")
 
-                with console.status("Generating response...", spinner="dots"):
+                with console.status("Generating response...", spinner="arc"):
                     response = get_llm_response(text)
+                    sample_rate, audio_array = tts.synthesize(response)
 
                 console.print(f"[green]Assistant: {response}")
+                sd.play(audio_array, sample_rate)
+                sd.wait()
             else:
                 console.print(
                     "[red]No audio recorded. Please ensure your microphone is working."
