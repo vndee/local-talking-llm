@@ -104,7 +104,7 @@ if __name__ == "__main__":
 
                 with console.status("Generating response...", spinner="earth"):
                     response = get_llm_response(text)
-                    sample_rate, audio_array = tts.synthesize(response)
+                    sample_rate, audio_array = tts.long_form_synthesize(response)
 
                 console.print(f"[cyan]Assistant: {response}")
                 sd.play(audio_array, sample_rate)

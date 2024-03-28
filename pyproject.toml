@@ -17,6 +17,7 @@ speechrecognition = "^3.10.1"
 pyaudio = "^0.2.14"
 langchain = "^0.1.13"
 vocos = "^0.1.0"
+nltk = "^3.8.1"
 
 
 [tool.poetry.group.dev.dependencies]
