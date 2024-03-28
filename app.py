@@ -15,15 +15,16 @@ console = Console()
 stt = whisper.load_model("base.en")
 tts = TextToSpeechService()
 template = """
-<s>[INST]You are a helpful assistant.You are polite and respectful.[/INST]<s>
+You are a helpful assistant.You are polite and respectful. Your response should less than 20 words
 The conversation transcript is as follows
 {history}
 And here is the user follow-up: {input}
+Your answer:
 """
 PROMPT = PromptTemplate(input_variables=["history", "input"], template=template)
 chain = ConversationChain(
     prompt=PROMPT,
-    verbose=True,
+    verbose=False,
     memory=ConversationBufferMemory(ai_prefix="Assistant:"),
     llm=Ollama(),
 )
@@ -69,7 +70,7 @@ if __name__ == "__main__":
         while True:
             # Wait for the user to press Enter to start recording
             input("[blue]Press Enter to start recording...")
-            console.print("[yellow]Recording... Press Enter to stop.")
+            console.print("[blue]Recording... Press Enter to stop.")
 
             data_queue = Queue()  # type: ignore[var-annotated]
             stop_event = threading.Event()
@@ -97,15 +98,15 @@ if __name__ == "__main__":
 
             # Transcribe the recorded audio
             if audio_np.size > 0:  # Proceed if there's audio data
-                with console.status("Transcribing...", spinner="arc"):
+                with console.status("Transcribing...", spinner="earth"):
                     text = transcribe(audio_np)
-                console.print(f"[green]You: {text}")
+                console.print(f"[yellow]You: {text}")
 
-                with console.status("Generating response...", spinner="arc"):
+                with console.status("Generating response...", spinner="earth"):
                     response = get_llm_response(text)
                     sample_rate, audio_array = tts.synthesize(response)
 
-                console.print(f"[green]Assistant: {response}")
+                console.print(f"[cyan]Assistant: {response}")
                 sd.play(audio_array, sample_rate)
                 sd.wait()
             else:
