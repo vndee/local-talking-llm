@@ -265,6 +265,8 @@ if __name__ == "__main__":
 ```
 ### Result
 
+Video demo: https://youtu.be/n3b9u1t4E-I?si=DksdOi0P6iPhY9g7
+
 Once everything is put down together, we can run the application as shown in the video above. The application runs quite slowly on my MacBook because the Bark model is large, even in its smaller version. Therefore, I have slightly sped up the video. For those with a CUDA-enabled computer, it might run faster. Here are the key features of our application:
 
 - **Voice-based interaction**: Users can start and stop recording their voice input, and the assistant responds by playing back the generated audio.
