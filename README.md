@@ -271,7 +271,7 @@ Once everything is put down together, we can run the application as shown in the
 
 - **Voice-based interaction**: Users can start and stop recording their voice input, and the assistant responds by playing back the generated audio.
 - **Conversational context**: The assistant maintains the context of the conversation, enabling more coherent and relevant responses. The use of the Llama-2 language model allows the assistant to provide concise and focused responses.
-- 
+
 For those aiming to elevate this application to a production-ready status, the following enhancements are recommended:
 
 - **Performance Optimization**: Incorporate optimized versions of the models, such as whisper.cpp, llama.cpp, and bark.cpp, which are designed to boost performance, especially on lower-end computers.
