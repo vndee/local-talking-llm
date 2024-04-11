@@ -278,4 +278,5 @@ For those aiming to elevate this application to a production-ready status, the f
 - **Customizable Bot Prompts**: Implement a system that allows users to customize the bot’s persona and prompt, enabling the creation of different types of assistants (e.g., personal, professional, or domain-specific).
 - **Graphical User Interface (GUI)**: Develop a user-friendly GUI to enhance the overall user experience, making the application more accessible and visually appealing.
 - **Multimodal Capabilities**: Expand the application to support multimodal interactions, such as the ability to generate and display images, diagrams, or other visual content in addition to the voice-based responses.
+
 Finally, we have completed our simple voice assistant application. This combination of speech recognition, language modeling, and text-to-speech technologies demonstrates how we can build something that sounds difficult but can actually run on your computer. Let’s enjoy coding, and don’t forget to subscribe to my blog so you don’t miss the latest in AI and programming articles.
