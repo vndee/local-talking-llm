@@ -39,11 +39,14 @@ class TextToSpeechService:
         inputs = {k: v.to(self.device) for k, v in inputs.items()}
 
         with torch.no_grad():
-            audio_array = self.model.generate(**inputs, pad_token_id=10000)
+            output = self.model(**inputs)
+            # audio_array = self.model.generate(**inputs, pad_token_id=10000)
 
-        audio_array = audio_array.cpu().numpy().squeeze()
-        sample_rate = self.model.generation_config.sample_rate
-        return sample_rate, audio_array
+        # audio_array = audio_array.cpu().numpy().squeeze()
+        # sample_rate = self.model.generation_config.sample_rate
+        # return sample_rate, audio_array
+        return output
+        
 
     def long_form_synthesize(self, text: str, voice_preset: str = "v2/en_speaker_1"):
         """

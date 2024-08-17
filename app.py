@@ -31,7 +31,7 @@ chain = ConversationChain(
     prompt=PROMPT,
     verbose=False,
     memory=ConversationBufferMemory(ai_prefix="Assistant:"),
-    llm=Ollama(),
+    llm=Ollama(model="codeqwen"),
 )
 
 
@@ -89,19 +89,19 @@ def get_llm_response(text: str) -> str:
     return response
 
 
-def play_audio(sample_rate, audio_array):
-    """
-    Plays the given audio data using the sounddevice library.
+# def play_audio(sample_rate, audio_array):
+#     """
+#     Plays the given audio data using the sounddevice library.
 
-    Args:
-        sample_rate (int): The sample rate of the audio data.
-        audio_array (numpy.ndarray): The audio data to be played.
+#     Args:
+#         sample_rate (int): The sample rate of the audio data.
+#         audio_array (numpy.ndarray): The audio data to be played.
 
-    Returns:
-        None
-    """
-    sd.play(audio_array, sample_rate)
-    sd.wait()
+#     Returns:
+#         None
+#     """
+#     sd.play(audio_array, sample_rate)
+#     sd.wait()
 
 
 if __name__ == "__main__":
@@ -137,10 +137,11 @@ if __name__ == "__main__":
 
                 with console.status("Generating response...", spinner="earth"):
                     response = get_llm_response(text)
-                    sample_rate, audio_array = tts.long_form_synthesize(response)
-
+                    # sample_rate, audio_array = tts.long_form_synthesize(response)
+                    print(f"Assistant: {response}")
+                
                 console.print(f"[cyan]Assistant: {response}")
-                play_audio(sample_rate, audio_array)
+                # play_audio(sample_rate, audio_array)
             else:
                 console.print(
                     "[red]No audio recorded. Please ensure your microphone is working."
