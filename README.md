@@ -3,6 +3,7 @@
 > Original article: https://blog.duy-huynh.com/build-your-own-voice-assistant-and-run-it-locally/
 >
 > **Updated May 2025**: Now using ChatterBox, a state-of-the-art open-source TTS model that outperforms ElevenLabs!
+> *The original implementation using Bark has been preserved in the `archive-2025-05-29` branch for reference.*
 
 After my latest post about how to build your own RAG and run it locally. Today, we're taking it a step further by not only implementing the conversational abilities of large language models but also adding listening and speaking capabilities. The idea is straightforward: we are going to create a voice assistant reminiscent of Jarvis or Friday from the iconic Iron Man movies, which can operate offline on your computer.
 
@@ -38,7 +39,7 @@ The workflow is straightforward: record speech, transcribe to text, generate a r
 flowchart TD
     A[🎤 User Speech Input] --> B[Speech Recognition<br/>OpenAI Whisper]
     B --> C[📝 Text Transcription]
-    C --> D[Conversational Chain<br/>Langchain + Ollama<br/>Llama-2 / Other LLMs]
+    C --> D[Conversational Chain<br/>Langchain + Ollama<br/>Gemma3 / Llama-4 / Other LLMs]
     D --> E[🤖 Generated Response]
     E --> F[Speech Synthesizer<br/>ChatterBox TTS]
     F --> G[🔊 Audio Output]
@@ -218,4 +219,3 @@ The combination of Whisper's robust speech recognition, Ollama's flexible LLM se
 
 ---
 
-*Note: The original implementation using Bark has been preserved in the `archive-2025-05-29` branch for reference.*
