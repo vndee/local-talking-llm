@@ -4,7 +4,7 @@
 >
 > **Updated May 2025**: Now using ChatterBox, a state-of-the-art open-source TTS model that outperforms ElevenLabs!
 >
-> *The original implementation using Bark has been preserved in the `archive-2025-05-29` branch for reference.*
+> The original implementation using Bark has been preserved in the `archive-2025-05-29` branch for reference.
 
 After my latest post about how to build your own RAG and run it locally. Today, we're taking it a step further by not only implementing the conversational abilities of large language models but also adding listening and speaking capabilities. The idea is straightforward: we are going to create a voice assistant reminiscent of Jarvis or Friday from the iconic Iron Man movies, which can operate offline on your computer.
 
