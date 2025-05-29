@@ -71,7 +71,7 @@ python -c "import nltk; nltk.download('punkt')"
 
 # Install and start Ollama
 # Follow instructions at https://ollama.ai
-ollama pull llama2  # or any other model you prefer
+ollama pull gemma3  # or any other model you prefer
 ```
 
 ### Usage
