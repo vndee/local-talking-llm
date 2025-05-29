@@ -12,8 +12,6 @@ After my latest post about how to build your own RAG and run it locally. Today, 
 - 🚀 **Better Performance**: 0.5B parameter model with faster inference
 - 💧 **Watermarked Audio**: Built-in neural watermarking for authenticity
 
-![voice_assistant](https://github.com/vndee/local-talking-llm/assets/28271488/858a6991-9c9b-4518-90a9-8263ad9ad767)
-
 ### Techstack
 First, you should set up a virtual Python environment. You have several options for this, including pyenv, virtualenv, poetry, and others that serve a similar purpose. Personally, I'll use Poetry for this tutorial due to my personal preferences. Here are several crucial libraries you'll need to install:
 
@@ -36,7 +34,25 @@ Okay, if everything has been set up, let's proceed to the next step. Below is th
 
 The workflow is straightforward: record speech, transcribe to text, generate a response using an LLM, and vocalize the response using ChatterBox.
 
-![Application-Architecture](https://github.com/vndee/local-talking-llm/assets/28271488/c0d2d92f-1def-48ee-85b1-503ccabdbedf)
+```mermaid
+flowchart TD
+    A[🎤 User Speech Input] --> B[Speech Recognition<br/>OpenAI Whisper]
+    B --> C[📝 Text Transcription]
+    C --> D[Conversational Chain<br/>Langchain + Ollama<br/>Llama-2 / Other LLMs]
+    D --> E[🤖 Generated Response]
+    E --> F[Speech Synthesizer<br/>ChatterBox TTS]
+    F --> G[🔊 Audio Output]
+    G --> H[👤 User Hears Response]
+    
+    style A fill:#e1f5fe
+    style B fill:#f3e5f5
+    style C fill:#e8f5e8
+    style D fill:#fff3e0
+    style E fill:#e8f5e8
+    style F fill:#f3e5f5
+    style G fill:#e1f5fe
+    style H fill:#fce4ec
+```
 
 ### Installation
 
@@ -179,17 +195,6 @@ For those aiming to elevate this application to a production-ready status, consi
   - RESTful API for TTS requests
   - WebSocket support for real-time communication
   - Rate limiting and authentication
-
-### Comparison: ChatterBox vs Bark
-
-| Feature | ChatterBox | Bark |
-|---------|------------|------|
-| Model Size | 0.5B | 1.5B+ |
-| Voice Cloning | ✅ Yes | ❌ No |
-| Emotion Control | ✅ Yes | ❌ No |
-| Inference Speed | Fast | Slower |
-| Audio Quality | Excellent | Good |
-| Watermarking | ✅ Yes | ❌ No |
 
 ### Troubleshooting
 

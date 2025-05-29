@@ -1,28 +1,18 @@
-[tool.poetry]
+[project]
 name = "local-talking-llm"
-version = "0.2.0"
-description = "Local voice assistant using Whisper + Ollama + ChatterBox"
-authors = ["Duy Huynh <vndee.huynh@gmail.com>"]
+version = "0.1.0"
+description = "Add your description here"
 readme = "README.md"
-
-[tool.poetry.dependencies]
-python = "^3.11,<3.12"
-requests = "^2.31.0"
-rich = "^13.7.1"
-torch = "^2.2.1"
-torchaudio = "^2.2.1"
-openai-whisper = {git = "https://github.com/openai/whisper.git"}
-sounddevice = "^0.4.6"
-chatterbox-tts = "*"
-speechrecognition = "^3.10.1"
-pyaudio = "^0.2.14"
-langchain = "^0.1.13"
-nltk = "^3.8.1"
-
-
-[tool.poetry.group.dev.dependencies]
-pre-commit = "^3.6.2"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires-python = ">=3.11"
+dependencies = [
+    "chatterbox-tts>=0.1.1",
+    "langchain-ollama>=0.3.3",
+    "langchain>=0.3.25",
+    "nltk>=3.9.1",
+    "openai-whisper>=20240930",
+    "peft>=0.15.2",
+    "rich>=14.0.0",
+    "setuptools>=80.9.0",
+    "sounddevice>=0.5.2",
+    "torchaudio>=2.6.0",
+]

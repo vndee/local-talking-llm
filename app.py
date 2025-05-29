@@ -7,10 +7,11 @@ import argparse
 import os
 from queue import Queue
 from rich.console import Console
-from langchain.memory import ConversationBufferMemory
-from langchain.chains import ConversationChain
-from langchain.prompts import PromptTemplate
-from langchain_community.llms import Ollama
+# Updated imports for modern LangChain
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.runnables.history import RunnableWithMessageHistory
+from langchain_core.chat_history import InMemoryChatMessageHistory
+from langchain_ollama import OllamaLLM
 from tts import TextToSpeechService
 
 console = Console()
@@ -21,32 +22,42 @@ parser = argparse.ArgumentParser(description="Local Voice Assistant with Chatter
 parser.add_argument("--voice", type=str, help="Path to voice sample for cloning")
 parser.add_argument("--exaggeration", type=float, default=0.5, help="Emotion exaggeration (0.0-1.0)")
 parser.add_argument("--cfg-weight", type=float, default=0.5, help="CFG weight for pacing (0.0-1.0)")
-parser.add_argument("--model", type=str, default="llama2", help="Ollama model to use")
+parser.add_argument("--model", type=str, default="gemma3", help="Ollama model to use")
 parser.add_argument("--save-voice", action="store_true", help="Save generated voice samples")
 args = parser.parse_args()
 
 # Initialize TTS with ChatterBox
 tts = TextToSpeechService()
 
-template = """
-You are a helpful and friendly AI assistant. You are polite, respectful, and aim to provide concise responses of less 
-than 20 words.
+# Modern prompt template using ChatPromptTemplate
+prompt_template = ChatPromptTemplate.from_messages([
+    ("system", "You are a helpful and friendly AI assistant. You are polite, respectful, and aim to provide concise responses of less than 20 words."),
+    MessagesPlaceholder(variable_name="history"),
+    ("human", "{input}")
+])
 
-The conversation transcript is as follows:
-{history}
+# Initialize LLM
+llm = OllamaLLM(model=args.model, base_url="http://localhost:11434")
 
-And here is the user's follow-up: {input}
+# Create the chain with modern LCEL syntax
+chain = prompt_template | llm
 
-Your response:
-"""
-PROMPT = PromptTemplate(input_variables=["history", "input"], template=template)
-chain = ConversationChain(
-    prompt=PROMPT,
-    verbose=False,
-    memory=ConversationBufferMemory(ai_prefix="Assistant:"),
-    llm=Ollama(model=args.model),
+# Chat history storage
+chat_sessions = {}
+
+def get_session_history(session_id: str) -> InMemoryChatMessageHistory:
+    """Get or create chat history for a session."""
+    if session_id not in chat_sessions:
+        chat_sessions[session_id] = InMemoryChatMessageHistory()
+    return chat_sessions[session_id]
+
+# Create the runnable with message history
+chain_with_history = RunnableWithMessageHistory(
+    chain,
+    get_session_history,
+    input_messages_key="input",
+    history_messages_key="history",
 )
-
 
 def record_audio(stop_event, data_queue):
     """
@@ -96,10 +107,18 @@ def get_llm_response(text: str) -> str:
     Returns:
         str: The generated response.
     """
-    response = chain.predict(input=text)
-    if response.startswith("Assistant:"):
-        response = response[len("Assistant:") :].strip()
-    return response
+    # Use a default session ID for this simple voice assistant
+    session_id = "voice_assistant_session"
+    
+    # Invoke the chain with history
+    response = chain_with_history.invoke(
+        {"input": text},
+        config={"session_id": session_id}
+    )
+    
+    # The response is now a string from the LLM, no need to remove "Assistant:" prefix
+    # since we're using a proper chat model setup
+    return response.strip()
 
 
 def play_audio(sample_rate, audio_array):
@@ -123,17 +142,15 @@ def analyze_emotion(text: str) -> float:
     Returns a value between 0.3 and 0.9 based on text content.
     """
     # Keywords that suggest more emotion
-    emotional_keywords = ['amazing', 'terrible', 'love', 'hate', 'excited', 
-                         'sad', 'happy', 'angry', 'wonderful', 'awful', 
-                         '!', '?!', '...']
-    
+    emotional_keywords = ['amazing', 'terrible', 'love', 'hate', 'excited', 'sad', 'happy', 'angry', 'wonderful', 'awful', '!', '?!', '...']
+
     emotion_score = 0.5  # Default neutral
-    
+
     text_lower = text.lower()
     for keyword in emotional_keywords:
         if keyword in text_lower:
             emotion_score += 0.1
-    
+
     # Cap between 0.3 and 0.9
     return min(0.9, max(0.3, emotion_score))
 
@@ -141,12 +158,12 @@ def analyze_emotion(text: str) -> float:
 if __name__ == "__main__":
     console.print("[cyan]🤖 Local Voice Assistant with ChatterBox TTS")
     console.print("[cyan]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-    
+
     if args.voice:
         console.print(f"[green]Using voice cloning from: {args.voice}")
     else:
         console.print("[yellow]Using default voice (no cloning)")
-    
+
     console.print(f"[blue]Emotion exaggeration: {args.exaggeration}")
     console.print(f"[blue]CFG weight: {args.cfg_weight}")
     console.print(f"[blue]LLM model: {args.model}")
@@ -158,7 +175,7 @@ if __name__ == "__main__":
         os.makedirs("voices", exist_ok=True)
 
     response_count = 0
-    
+
     try:
         while True:
             console.input(
@@ -189,13 +206,13 @@ if __name__ == "__main__":
 
                 with console.status("Generating response...", spinner="dots"):
                     response = get_llm_response(text)
-                    
+
                     # Analyze emotion and adjust exaggeration dynamically
                     dynamic_exaggeration = analyze_emotion(response)
-                    
+
                     # Use lower cfg_weight for more expressive responses
                     dynamic_cfg = args.cfg_weight * 0.8 if dynamic_exaggeration > 0.6 else args.cfg_weight
-                    
+
                     sample_rate, audio_array = tts.long_form_synthesize(
                         response,
                         audio_prompt_path=args.voice,
@@ -205,14 +222,14 @@ if __name__ == "__main__":
 
                 console.print(f"[cyan]Assistant: {response}")
                 console.print(f"[dim](Emotion: {dynamic_exaggeration:.2f}, CFG: {dynamic_cfg:.2f})[/dim]")
-                
+
                 # Save voice sample if requested
                 if args.save_voice:
                     response_count += 1
                     filename = f"voices/response_{response_count:03d}.wav"
                     tts.save_voice_sample(response, filename, args.voice)
                     console.print(f"[dim]Voice saved to: {filename}[/dim]")
-                
+
                 play_audio(sample_rate, audio_array)
             else:
                 console.print(
