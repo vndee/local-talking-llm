@@ -109,13 +109,13 @@ def get_llm_response(text: str) -> str:
     """
     # Use a default session ID for this simple voice assistant
     session_id = "voice_assistant_session"
-    
+
     # Invoke the chain with history
     response = chain_with_history.invoke(
         {"input": text},
         config={"session_id": session_id}
     )
-    
+
     # The response is now a string from the LLM, no need to remove "Assistant:" prefix
     # since we're using a proper chat model setup
     return response.strip()

@@ -1,7 +1,7 @@
 ## Build your own voice assistant and run it locally: Whisper + Ollama + ChatterBox
 
 > Original article: https://blog.duy-huynh.com/build-your-own-voice-assistant-and-run-it-locally/
-> 
+>
 > **Updated May 2025**: Now using ChatterBox, a state-of-the-art open-source TTS model that outperforms ElevenLabs!
 
 After my latest post about how to build your own RAG and run it locally. Today, we're taking it a step further by not only implementing the conversational abilities of large language models but also adding listening and speaking capabilities. The idea is straightforward: we are going to create a voice assistant reminiscent of Jarvis or Friday from the iconic Iron Man movies, which can operate offline on your computer.
@@ -43,7 +43,7 @@ flowchart TD
     E --> F[Speech Synthesizer<br/>ChatterBox TTS]
     F --> G[🔊 Audio Output]
     G --> H[👤 User Hears Response]
-    
+
     style A fill:#e1f5fe
     style B fill:#f3e5f5
     style C fill:#e8f5e8
@@ -122,11 +122,11 @@ class TextToSpeechService:
         self.device = device
         self.model = ChatterboxTTS.from_pretrained(device=device)
         self.sample_rate = self.model.sr
-        
-    def synthesize(self, text: str, audio_prompt_path: str = None, 
+
+    def synthesize(self, text: str, audio_prompt_path: str = None,
                   exaggeration: float = 0.5, cfg_weight: float = 0.5):
         wav = self.model.generate(
-            text, 
+            text,
             audio_prompt_path=audio_prompt_path,
             exaggeration=exaggeration,
             cfg_weight=cfg_weight
@@ -145,7 +145,7 @@ The app now includes automatic emotion detection to make responses more expressi
 
 ```python
 def analyze_emotion(text: str) -> float:
-    emotional_keywords = ['amazing', 'terrible', 'love', 'hate', 'excited', 
+    emotional_keywords = ['amazing', 'terrible', 'love', 'hate', 'excited',
                          'sad', 'happy', 'angry', '!', '?!']
     emotion_score = 0.5
     for keyword in emotional_keywords:
@@ -175,7 +175,7 @@ def analyze_emotion(text: str) -> float:
 
 For those aiming to elevate this application to a production-ready status, consider:
 
-- **Performance Optimization**: 
+- **Performance Optimization**:
   - Use optimized inference engines (ONNX, TensorRT)
   - Implement model quantization for faster inference
   - Add caching for frequently used phrases

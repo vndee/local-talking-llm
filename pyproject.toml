@@ -16,3 +16,8 @@ dependencies = [
     "sounddevice>=0.5.2",
     "torchaudio>=2.6.0",
 ]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.2.0",
+]

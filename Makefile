@@ -16,11 +16,7 @@ hello:
 	@echo "${GREEN}Terminal:${RESET}\t\t${YELLOW}$$(echo $$TERM)${RESET}"
 
 
-env:
-	@echo "To activate the Poetry environment, run:"
-	@echo "source $$(poetry env info --path)/bin/activate"
-
 lint:
 	@echo "Running linter..."
-	@source $$(poetry env info --path)/bin/activate && pre-commit run --all-files
+	@source .venv/bin/activate && pre-commit run --all-files
 	@echo "Done."

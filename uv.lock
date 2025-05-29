@@ -634,6 +634,11 @@ dependencies = [
     { name = "torchaudio" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pre-commit" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "chatterbox-tts", specifier = ">=0.1.1" },
@@ -647,6 +652,9 @@ requires-dist = [
     { name = "sounddevice", specifier = ">=0.5.2" },
     { name = "torchaudio", specifier = ">=2.6.0" },
 ]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pre-commit", specifier = ">=4.2.0" }]
 
 [[package]]
 name = "markdown-it-py"
