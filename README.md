@@ -2,7 +2,7 @@
 
 > Original article: https://blog.duy-huynh.com/build-your-own-voice-assistant-and-run-it-locally/
 >
-> **Updated May 2025**: Now using ChatterBox, a state-of-the-art open-source TTS model that outperforms ElevenLabs!
+> **Updated May 2025**: Now using [Chatterbox TTS](https://github.com/resemble-ai/chatterbox), a state-of-the-art open-source TTS model from Resemble AI!
 >
 > The original implementation using Bark has been preserved in the `archive-2025-05-29` branch for reference.
 
@@ -32,7 +32,7 @@ Okay, if everything has been set up, let's proceed to the next step. Below is th
 
 - **Speech Recognition**: Utilizing OpenAI's Whisper, we convert spoken language into text. Whisper's training on diverse datasets ensures its proficiency across various languages and dialects.
 - **Conversational Chain**: For the conversational capabilities, we'll employ the Langchain interface for the Llama-2 model (or any other model), which is served using Ollama. This setup promises a seamless and engaging conversational flow.
-- **Speech Synthesizer**: The transformation of text to speech is achieved through ChatterBox, a state-of-the-art model from Resemble AI, renowned for its lifelike speech production and voice cloning capabilities.
+- **Speech Synthesizer**: The transformation of text to speech is achieved through Chatterbox TTS, a state-of-the-art model from Resemble AI, renowned for its lifelike speech production and voice cloning capabilities.
 
 The workflow is straightforward: record speech, transcribe to text, generate a response using an LLM, and vocalize the response using ChatterBox.
 
@@ -42,7 +42,7 @@ flowchart TD
     B --> C[📝 Text Transcription]
     C --> D[Conversational Chain<br/>Langchain + Ollama<br/>Gemma3 / Llama-4 / Other LLMs]
     D --> E[🤖 Generated Response]
-    E --> F[Speech Synthesizer<br/>ChatterBox TTS]
+    E --> F[Speech Synthesizer<br/>Chatterbox TTS]
     F --> G[🔊 Audio Output]
     G --> H[👤 User Hears Response]
 
