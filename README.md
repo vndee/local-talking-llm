@@ -79,7 +79,7 @@ uv sync
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
 # Download NLTK data (for sentence tokenization)
-python -c "import nltk; nltk.download('punkt')"
+python -c "import nltk; nltk.download('punkt_tab')"
 ```
 
 #### Option 2: Using pip (Alternative)
