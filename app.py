@@ -23,7 +23,7 @@ parser = argparse.ArgumentParser(description="Local Voice Assistant with Chatter
 parser.add_argument("--voice", type=str, help="Path to voice sample for cloning")
 parser.add_argument("--exaggeration", type=float, default=0.5, help="Emotion exaggeration (0.0-1.0)")
 parser.add_argument("--cfg-weight", type=float, default=0.5, help="CFG weight for pacing (0.0-1.0)")
-parser.add_argument("--model", type=str, default=None, help="LLM model name (default: gemma3 for ollama, MiniMax-M2.7 for minimax)")
+parser.add_argument("--model", type=str, default=None, help="LLM model name (default: gemma3 for ollama, MiniMax-M3 for minimax)")
 parser.add_argument("--provider", type=str, default="ollama", choices=["ollama", "minimax"],
                     help="LLM provider: 'ollama' for local models, 'minimax' for MiniMax cloud API (default: ollama)")
 parser.add_argument("--api-key", type=str, default=None, help="API key for cloud LLM providers (or set MINIMAX_API_KEY env var)")
@@ -41,7 +41,7 @@ def create_llm(provider: str, model: str | None = None, api_key: str | None = No
 
     Args:
         provider: LLM provider name ('ollama' or 'minimax').
-        model: Model name. Defaults to 'gemma3' for ollama, 'MiniMax-M2.7' for minimax.
+        model: Model name. Defaults to 'gemma3' for ollama, 'MiniMax-M3' for minimax.
         api_key: API key for cloud providers (or set MINIMAX_API_KEY env var).
         temperature: LLM temperature (default: 0.7).
 
@@ -62,7 +62,7 @@ def create_llm(provider: str, model: str | None = None, api_key: str | None = No
         # MiniMax temperature must be in (0.0, 1.0]
         clamped_temperature = max(0.01, min(1.0, temperature))
         return ChatOpenAI(
-            model=model or "MiniMax-M2.7",
+            model=model or "MiniMax-M3",
             base_url="https://api.minimax.io/v1",
             api_key=resolved_key,
             temperature=clamped_temperature,
@@ -214,7 +214,7 @@ if __name__ == "__main__":
 
     console.print(f"[blue]Emotion exaggeration: {args.exaggeration}")
     console.print(f"[blue]CFG weight: {args.cfg_weight}")
-    console.print(f"[blue]LLM model: {args.model or ('gemma3' if args.provider == 'ollama' else 'MiniMax-M2.7')}")
+    console.print(f"[blue]LLM model: {args.model or ('gemma3' if args.provider == 'ollama' else 'MiniMax-M3')}")
     console.print(f"[blue]LLM provider: {args.provider}")
     console.print("[cyan]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
     console.print("[cyan]Press Ctrl+C to exit.\n")

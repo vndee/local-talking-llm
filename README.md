@@ -35,7 +35,7 @@ The most critical component here is the Large Language Model (LLM) backend. By d
 Okay, if everything has been set up, let's proceed to the next step. Below is the overall architecture of our application, which fundamentally comprises 3 main components:
 
 - **Speech Recognition**: Utilizing OpenAI's Whisper, we convert spoken language into text. Whisper's training on diverse datasets ensures its proficiency across various languages and dialects.
-- **Conversational Chain**: For the conversational capabilities, we'll employ the Langchain interface with a pluggable LLM backend — either a local model via Ollama (e.g., Gemma3, Llama-4) or a cloud model via [MiniMax](https://www.minimaxi.com) (MiniMax-M2.7). This setup promises a seamless and engaging conversational flow.
+- **Conversational Chain**: For the conversational capabilities, we'll employ the Langchain interface with a pluggable LLM backend — either a local model via Ollama (e.g., Gemma3, Llama-4) or a cloud model via [MiniMax](https://www.minimaxi.com) (MiniMax-M3). This setup promises a seamless and engaging conversational flow.
 - **Speech Synthesizer**: The transformation of text to speech is achieved through Chatterbox TTS, a state-of-the-art model from Resemble AI, renowned for its lifelike speech production and voice cloning capabilities.
 
 The workflow is straightforward: record speech, transcribe to text, generate a response using an LLM, and vocalize the response using ChatterBox.
@@ -44,7 +44,7 @@ The workflow is straightforward: record speech, transcribe to text, generate a r
 flowchart TD
     A[🎤 User Speech Input] --> B[Speech Recognition<br/>OpenAI Whisper]
     B --> C[📝 Text Transcription]
-    C --> D[Conversational Chain<br/>Langchain + Ollama / MiniMax<br/>Gemma3 / Llama-4 / MiniMax-M2.7]
+    C --> D[Conversational Chain<br/>Langchain + Ollama / MiniMax<br/>Gemma3 / Llama-4 / MiniMax-M3]
     D --> E[🤖 Generated Response]
     E --> F[Speech Synthesizer<br/>Chatterbox TTS]
     F --> G[🔊 Audio Output]
@@ -157,7 +157,10 @@ python app.py --save-voice
 python app.py --provider minimax
 
 # Use a specific MiniMax model with custom temperature
-python app.py --provider minimax --model MiniMax-M2.7 --temperature 0.8
+python app.py --provider minimax --model MiniMax-M3 --temperature 0.8
+
+# Fall back to the previous-generation model
+python app.py --provider minimax --model MiniMax-M2.7
 
 # Pass API key directly
 python app.py --provider minimax --api-key your-api-key-here
