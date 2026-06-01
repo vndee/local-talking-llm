@@ -56,11 +56,11 @@ class TestCreateLlm(unittest.TestCase):
 
     @patch("langchain_openai.ChatOpenAI")
     def test_minimax_provider_default_model(self, mock_chat):
-        """Test that MiniMax provider uses default model 'MiniMax-M2.7'."""
+        """Test that MiniMax provider uses default model 'MiniMax-M3'."""
         create_llm = self._import_create_llm()
         create_llm("minimax", api_key="test-key")
         mock_chat.assert_called_once_with(
-            model="MiniMax-M2.7",
+            model="MiniMax-M3",
             base_url="https://api.minimax.io/v1",
             api_key="test-key",
             temperature=0.7,
@@ -85,7 +85,7 @@ class TestCreateLlm(unittest.TestCase):
         with patch.dict(os.environ, {"MINIMAX_API_KEY": "env-key"}):
             create_llm("minimax")
         mock_chat.assert_called_once_with(
-            model="MiniMax-M2.7",
+            model="MiniMax-M3",
             base_url="https://api.minimax.io/v1",
             api_key="env-key",
             temperature=0.7,
